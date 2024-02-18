@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { useEffect } from 'react';
+import Description from './components/Description';
+import Options from './components/Options';
+import Feedback from './components/Feedback';
+
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [clickButton, setclickButton] = useState(() => {
+        const savedClicks = window.localStorage.getItem('saved-clicks');
+        return savedClicks !== null ? JSON.parse(savedClicks) : { good: 0, neutral: 0, bad: 0 };
+    });
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const totalFeedback = clickButton.good + clickButton.neutral + clickButton.bad;
+
+    const updateFeedback = feedbackType => {
+        const targetButton = feedbackType.target.textContent.toLowerCase();
+
+        setclickButton({ ...clickButton, [targetButton]: clickButton[targetButton] + 1 });
+        if (targetButton === 'reset') {
+            setclickButton({
+                good: 0,
+                neutral: 0,
+                bad: 0,
+            });
+        }
+    };
+
+    useEffect(() => {
+        localStorage.setItem('saved-clicks', JSON.stringify(clickButton));
+    }, [clickButton]);
+
+    return (
+        <>
+            <Description />
+            <Options updateFeedback={updateFeedback} totalFeedback={totalFeedback} />
+            {totalFeedback ? (
+                <Feedback clickButton={clickButton} totalFeedback={totalFeedback} />
+            ) : (
+                'No feedback yet'
+            )}
+        </>
+    );
 }
 
-export default App
+export default App;
