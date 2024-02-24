@@ -1,5 +1,7 @@
 export default function Feedback({ clickButton: { good, neutral, bad }, totalFeedback }) {
-    const getPpositive = Math.round(((good + neutral) / totalFeedback) * 100);
+    const getPositive =
+        totalFeedback === 0 ? undefined : Math.round(((good + neutral) / totalFeedback) * 100);
+
     return (
         <ul className="listButton">
             <li>
@@ -13,7 +15,7 @@ export default function Feedback({ clickButton: { good, neutral, bad }, totalFee
             </li>
             {totalFeedback ? (
                 <li>
-                    <p>Positive: {getPpositive}%</p>
+                    <p>Positive: {getPositive}%</p>
                 </li>
             ) : null}
         </ul>

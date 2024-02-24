@@ -1,20 +1,20 @@
 import { listButton } from './Options.module.css';
 
-export default function Options({ updateFeedback, totalFeedback }) {
+export default function Options({ updateFeedback, totalFeedback, resetFunction }) {
     return (
         <ul className={listButton}>
             <li>
-                <button onClick={updateFeedback}>Good</button>
+                <button onClick={() => updateFeedback('good')}>Good</button>
             </li>
             <li>
-                <button onClick={updateFeedback}>Neutral</button>
+                <button onClick={() => updateFeedback('neutral')}>Neutral</button>
             </li>
             <li>
-                <button onClick={updateFeedback}>Bad</button>
+                <button onClick={() => updateFeedback('bad')}>Bad</button>
             </li>
             {totalFeedback ? (
                 <li>
-                    <button onClick={updateFeedback}>Reset</button>
+                    <button onClick={() => updateFeedback('reset')}>Reset</button>
                 </li>
             ) : null}
         </ul>
